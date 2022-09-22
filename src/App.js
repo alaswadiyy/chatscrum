@@ -1,25 +1,30 @@
-import logo from './logo.svg';
+import React from 'react'
 import './App.css';
+import Home from "./components/home/home";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Scrumboard from './components/scrumboard/scrumboard';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import SignUp from './components/sign-up/sign-up';
+import SignIn from './components/sign-in/sign-in';
+
+class App extends React.Component {
+  render() {
+    return (
+      <div className='App'>
+        <BrowserRouter>
+          <Routes>
+            <Route path='/' element={<Home/>} />
+            <Route path='/signin' element={<SignIn/>} />
+            <Route path='/signup' element={<SignUp/>} />
+            <Route path='/scrumboard' element={<Scrumboard/>} />
+
+          </Routes>
+        </BrowserRouter>
+      </div>
+    )
+      
+    
+  }
 }
 
 export default App;
