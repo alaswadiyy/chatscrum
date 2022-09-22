@@ -1,20 +1,22 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
+import React, { useEffect, useState } from 'react'
 import taskList from '../../static/tasks'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-const Container = styled.div`
-    border: 1px solid lightgrey;
-    border-radius: 2px;
-    padding: 8px;
-    margin-bottom: 8px;
-    cursor: pointer ;
-`;
+// const Container = styled.div`
+//     border: 1px solid lightgrey;
+//     border-radius: 2px;
+//     padding: 8px;
+//     margin-bottom: 8px;
+//     cursor: pointer ;
+// `;
 
 export default function Tasks() {
     const [weeklyTasks, updateWeeklyTasks] = useState(taskList); 
     const [dailyTasks, setDailyTasks] = useState([]);
 
+    useEffect(() => {
+        updateWeeklyTasks(taskList)
+    }, [taskList])
     
 
     const handleOnDragEnd = result => {
@@ -27,7 +29,6 @@ export default function Tasks() {
                 let tempWeeklyTasks = Array.from(weeklyTasks);
                 const [reorderedItem] = tempWeeklyTasks.splice(result.source.index, 1);
                 tempWeeklyTasks.splice(result.destination.index, 0, reorderedItem);
-
                 updateWeeklyTasks(tempWeeklyTasks);
             } else {
                 let tempDailyTasks = Array.from(dailyTasks);
@@ -64,9 +65,10 @@ export default function Tasks() {
                                 return (
                                     <Draggable key={id} draggableId={id} index={index} >
                                         {(provided) => (
-                                            <Container className='task' ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} >
+                                            <p className='task' ref={provided.innerRef} 
+                                            {...provided.draggableProps} {...provided.dragHandleProps} >
                                                 {item}
-                                            </Container>
+                                            </p>
                                         )}
                                     </Draggable>
                                 )
@@ -83,9 +85,9 @@ export default function Tasks() {
                                 return (
                                     <Draggable key={id} draggableId={id} index={index}>
                                         {(provided) => (
-                                            <Container className='task' ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} >
+                                            <p className='task' ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} >
                                                 {item}
-                                            </Container>
+                                            </p>
                                         )}
                                     </Draggable>
                                 )
