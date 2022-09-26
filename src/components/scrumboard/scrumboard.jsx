@@ -2,40 +2,44 @@ import React, { Component } from 'react'
 import Data from '../../static/data';
 import './scrumboard.css'
 import Tasks from '../tasks/tasks';
+import AddTasks from './addTasks';
+import Users from "../users/users"
+import axios from 'axios';
 
 export class Scrumboard extends Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.state = {
       data: Data,
       isOpen: false,
-      tasks: null
+      tasks: []
     }
   }
-
-  openModal = () => {
-    this.setState({
-      isOpen: true
+  addTasks =(task) => {
+    task.id = Math.random().toString(36).slice(2,9)
+    let tasks = [...this.state.tasks, task]
+    this.setState(
+      tasks
+    )
+  }
+ 
+  deleteTasks = (id) => {
+    const tasks = this.state.tasks.filter(task =>{
+      return task.id !== id
     })
+    this.setState(
+      tasks
+    )
   }
 
-  closeModal = () => {
-    this.setState({
-      isOpen: false
-    })
-  }
-
-  handleChange = (e) => {
-    this.setState({
-      tasks: e.target.value
-    })
-  }
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.setState({
-      isOpen: false
-    })
+  componentDidMount(){
+    axios.get('https://liveapi.chatscrum.com/scrum/api/scrumgoals/')
+      .then(res => {
+        console.log(res)
+        this.setState({
+          tasks:res.data,
+        })
+      })
   }
 
   render() {
@@ -51,19 +55,10 @@ export class Scrumboard extends Component {
         </nav>
         <p id='info'>Hello {Data.fullname} Welcome to your scrumboard</p>
 
-        <Tasks/>
-
-        <div id='modal' className={this.state.isOpen? "show" : "hidden"}>
-          <div className='header'>
-            <h3>Add a new task</h3>
-            <h3 id='close' onClick={() => this.closeModal()}>X</h3>
-          </div>
-          <form onSubmit={this.handleSubmit}>
-            <input type="text" onChange={this.handleChange} />
-            <button>CONFIRM</button>
-          </form>
-        </div>
-        <button className='add' onClick={() => this.openModal()}>ADD TASK</button>
+        <Tasks data={this.state.tasks} deleteTasks={this.deleteTasks} />
+        <AddTasks addTasks={this.addTasks}/>
+        <Users/>
+        
       </div>
     )
   }
